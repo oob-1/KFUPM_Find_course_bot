@@ -71,13 +71,13 @@ def send_to_users(dif):
                     BOT.send_message(user_id,format(course))
 
 
-def is_correct_course(course): # check if the course in the current term
+def is_correct_course(course): # return True if the course in the current term
     for i in all_courses: 
         if course.upper() == i['subjectCourse'] or course == i['courseReferenceNumber']:
             return True
     return False
 
-def is_registered(user_id): # check if the user have registered
+def is_registered(user_id): # return True if the user have registered
     temp = read_users_data()
     for ideeeees in temp.values():
         if user_id in ideeeees:
@@ -109,7 +109,12 @@ def welcome(msg):
 
     if msg.text == "/start":
         isStart = True
-        BOT.send_message(msg.chat.id,'Enter the crn or the course name - (ICS104) :')
+        BOT.send_message(msg.chat.id,'''
+                         يا أهلًا وسهلًا في بوت مراقبة الكورسات🙋‍♂️
+
+ارسل اسم الكورس او CRN وراح يرسلك البوت اذا يمديك تسجل أو لا:
+
+                         ''')
 
     if msg.text == "/registered": 
         if is_registered(msg.chat.id):
