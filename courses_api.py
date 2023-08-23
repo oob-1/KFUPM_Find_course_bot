@@ -11,7 +11,10 @@ def remove_un_data(t:list):
                'reservedSeatSummary','openSection']
     for i in t:
         for j in data_to_del:
-            i.pop(j)
+            try:
+                i.pop(j)
+            except:
+                continue
             
 def get_cookies(term:str, course:str, choice = 0):
     course_name = course.rstrip('0123456789')
@@ -29,7 +32,10 @@ def get_cookies(term:str, course:str, choice = 0):
     )
     
     if choice: # to get the number of results -how many courses-
-        return response2.json()["totalCount"] 
+        try:# if somthing went wrong -happend once-
+            return response2.json()["totalCount"] 
+        except:
+            return 0
     return response1.cookies.get("JSESSIONID")
 
 
@@ -85,17 +91,18 @@ def search_course(term:str, course:str ="", crn:str = ""):
     remove_un_data(temp)
 
     
-
-    if crn: # if pass crn
-        for i in temp:
-            if i["courseReferenceNumber"] == str(crn):
-                return i
-        return "Crn not found."
-    if not temp: # if empty then no course found
-        return "not found."
+    ### for the bot i will hide it 
+    # if crn: # if pass crn
+    #     for i in temp:
+    #         if i["courseReferenceNumber"] == str(crn):
+    #             return i
+    #     return "Crn not found."
+    # if not temp: # if empty then no course found
+    #     return "not found."
     
-    # sort the data by crn
-    temp.sort(key=lambda x: x['courseReferenceNumber'], reverse=False) 
+    # sort the data by crn if it is not empty
+    if temp:
+        temp.sort(key=lambda x: x['courseReferenceNumber'], reverse=False) 
     return temp
     
             
