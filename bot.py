@@ -60,15 +60,14 @@ def reset(user_id):
 
 
 def send_to_users(dif):
-    if dif:
-        temp = read_users_data()
-        for course in dif: # thre
-            if course['subjectCourse'] in temp:
-                for user_id in temp[course['subjectCourse']]:
-                    BOT.send_message(user_id,format(course))
-            if course['courseReferenceNumber'] in temp:
-                for user_id in temp[course['courseReferenceNumber']]:
-                    BOT.send_message(user_id,format(course))
+    temp = read_users_data()
+    for course in dif: # thre
+        if course['subjectCourse'] in temp:
+            for user_id in temp[course['subjectCourse']]:
+                BOT.send_message(user_id,format(course))
+        if course['courseReferenceNumber'] in temp:
+            for user_id in temp[course['courseReferenceNumber']]:
+                BOT.send_message(user_id,format(course))
 
 
 def is_correct_course(course): # return True if the course in the current term
@@ -164,14 +163,16 @@ def a2(): # check if there any change in the courses
                 idx+=1
             except:
                 base = copy.deepcopy(chang) # update the base
-                # send to users
-                send_to_users(difference)
+
+                # send to users if there is change in the course
+                if difference:
+                    send_to_users(difference)
                 break
 
 def main():
     with ProcessPoolExecutor() as executor: # multiprocessing
-        executor.submit(a1)
-        executor.submit(a2)
+        executor.submit(a1).result()
+        executor.submit(a2).result()
 
 if __name__ == '__main__':
     main()
